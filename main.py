@@ -1,0 +1,46 @@
+import dotenv
+import os
+import download_pics
+import requests
+import urllib3
+import random
+urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
+
+
+def get_pics_max_number():
+    temp_url = f'https://xkcd.com/info.0.json'
+    try:
+        response = requests.get(temp_url)
+        img_last_num = response.json()['num']
+        return img_last_num
+    except Exception as e:
+        print(f'Error: {e}')
+
+
+def get_pic_from_xkcd(numb, path):
+    temp_url = f'https://xkcd.com/{numb}/info.0.json'
+    try:
+        response = requests.get(temp_url)
+        img_url = response.json()['img']
+        img_comment = response.json()['alt']
+        img_path = download_pics.load_img_with_pillow(img_url, path=os.path.join(path, img_url.split('/')[-1]))
+        return {'path': img_path, 'comment': img_comment}
+    except Exception as e:
+        print(f'Error: {e}')
+
+
+if __name__ == "__main__":
+    dotenv.load_dotenv()
+    import vk_api
+
+    MY_GROUP_ID = os.getenv('MY_GROUP_ID')
+    base_path = os.getcwd()
+    dir_name = 'images'
+    image_paths = os.path.join(base_path, dir_name)
+    os.makedirs(image_paths, exist_ok=True)
+
+    random_img_num = random.randint(0, get_pics_max_number())
+    current_img = get_pic_from_xkcd(random_img_num, image_paths)
+    vk_api.create_post_on_group_wall(group_id=MY_GROUP_ID, current_img=current_img)
+
+
