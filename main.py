@@ -38,13 +38,16 @@ if __name__ == "__main__":
     dir_name = 'images'
     image_paths = os.path.join(base_path, dir_name)
     os.makedirs(image_paths, exist_ok=True)
+    current_img = None
     try:
         random_img_num = random.randint(0, get_pics_max_number())
         current_img = get_pic_from_xkcd(random_img_num, image_paths)
         vk_api.create_post_on_group_wall(group_id=my_vk_group_id,
                                          current_img=current_img,
                                          my_vk_key=my_vk_key)
-        os.remove(current_img['path'])
     except Exception as e:
         print(f'Error: {e}')
+    finally:
+        if current_img:
+            os.remove(current_img['path'])
 
