@@ -21,9 +21,9 @@ def get_pics_max_number():
 def get_pic_from_xkcd(numb, path):
     temp_url = f'https://xkcd.com/{numb}/info.0.json'
     try:
-        response = requests.get(temp_url)
-        img_url = response.json()['img']
-        img_comment = response.json()['alt']
+        response = requests.get(temp_url).json()
+        img_url = response['img']
+        img_comment = response['alt']
         img_path = download_pics.load_img_with_pillow(img_url, path=os.path.join(path, img_url.split('/')[-1]))
         return {'path': img_path, 'comment': img_comment}
     except Exception as e:
