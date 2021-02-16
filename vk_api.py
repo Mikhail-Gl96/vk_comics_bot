@@ -9,8 +9,13 @@ def request_to_vk_api_post(method, parameters, access_token, v='5.130'):
     }
     data.update(parameters)
     response = requests.post(url=url, data=data)
+    # Если от вк придет ответ отличный от 200 - могли ошибиться в url или еще что-то, то сработает raise_for_status
     response.raise_for_status()
-    return response.json()
+    response_jsonify = response.json()
+    # Если ошибка в теле запроса - обработаем вручную
+    if 'error' in response_jsonify.keys():
+        raise ConnectionError(f'{response_jsonify["error"]}')
+    return response_jsonify
 
 
 def get_url_to_upload_photo(group_id, my_vk_key):
@@ -28,7 +33,11 @@ def upload_photo_on_wall(image_path, upload_url):
         }
         response = requests.post(url=upload_url, files=parameters)
         response.raise_for_status()
-    return response.json()['server'], response.json()['photo'], response.json()['hash']
+        response_jsonify = response.json()
+        # Если пришел пустой массив с фото - значит где-то ошибка
+        if 'photo' in response_jsonify.keys() and response_jsonify['photo'] == "[]":
+            raise ValueError(f'photo is empty: {response_jsonify}')
+    return response_jsonify['server'], response_jsonify['photo'], response_jsonify['hash']
 
 
 def save_wall_photo(group_id, photo, server, hash, my_vk_key):
