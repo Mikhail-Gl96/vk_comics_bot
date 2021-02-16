@@ -1,6 +1,5 @@
 import requests
 
-
 def post_request_to_vk_api(method, parameters, access_token, v='5.130'):
     url = f'https://api.vk.com/method/{method}'
     data = {
@@ -14,7 +13,7 @@ def post_request_to_vk_api(method, parameters, access_token, v='5.130'):
     response = response.json()
     # Если ошибка в теле запроса - обработаем вручную
     if 'error' in response.keys():
-        raise ConnectionError(f'{response["error"]}')
+        raise requests.HTTPError(f'{response["error"]}')
     return response
 
 
