@@ -12,13 +12,16 @@ import vk_api
 def get_pics_max_number():
     temp_url = f'https://xkcd.com/info.0.json'
     response = requests.get(temp_url)
+    response.raise_for_status()
     img_last_num = response.json()['num']
     return img_last_num
 
 
 def get_pic_from_xkcd(numb, path):
     temp_url = f'https://xkcd.com/{numb}/info.0.json'
-    response = requests.get(temp_url).json()
+    response = requests.get(temp_url)
+    response.raise_for_status()
+    response = response.json()
     img_url = response['img']
     img_comment = response['alt']
     img_name = os.path.split(urllib.parse.urlsplit(img_url)[2])[-1]
