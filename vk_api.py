@@ -40,13 +40,13 @@ def upload_photo_on_wall(image_path, upload_url):
     return response['server'], response['photo'], response['hash']
 
 
-def save_wall_photo(group_id, photo, server, hash, my_vk_key):
+def save_wall_photo(group_id, photo, server, photo_hash, my_vk_key):
     method = 'photos.saveWallPhoto'
     parameters = {
         'group_id': group_id,
         'photo': photo,
         'server': server,
-        'hash': hash
+        'hash': photo_hash
     }
     response = post_request_to_vk_api(method=method, parameters=parameters, access_token=my_vk_key)
     return response
@@ -66,8 +66,8 @@ def create_wall_post_in_group(group_id, message, attachments_type, owner_id, med
 
 def create_post_on_group_wall(group_id, current_img, my_vk_key):
     upload_url, album_id, user_id = get_url_to_upload_photo(group_id=group_id, my_vk_key=my_vk_key)
-    server, photo, hash = upload_photo_on_wall(current_img['path'], upload_url)
-    status = save_wall_photo(group_id=group_id, photo=photo, server=server, hash=hash, my_vk_key=my_vk_key)
+    server, photo, photo_hash = upload_photo_on_wall(current_img['path'], upload_url)
+    status = save_wall_photo(group_id=group_id, photo=photo, server=server, photo_hash=photo_hash, my_vk_key=my_vk_key)
     create_wall_post_in_group(group_id=group_id,
                               message=current_img['comment'],
                               attachments_type='photo',
