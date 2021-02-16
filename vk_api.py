@@ -1,7 +1,7 @@
 import requests
 
 
-def request_to_vk_api_post(method, parameters, access_token, v='5.130'):
+def post_request_to_vk_api(method, parameters, access_token, v='5.130'):
     url = f'https://api.vk.com/method/{method}'
     data = {
         'access_token': access_token,
@@ -21,7 +21,7 @@ def request_to_vk_api_post(method, parameters, access_token, v='5.130'):
 def get_url_to_upload_photo(group_id, my_vk_key):
     method = 'photos.getWallUploadServer'
     parameters = {'group_id': group_id}
-    response = request_to_vk_api_post(method=method, parameters=parameters, access_token=my_vk_key)
+    response = post_request_to_vk_api(method=method, parameters=parameters, access_token=my_vk_key)
     return response['response']['upload_url'], response['response']['album_id'], response['response']['user_id']
 
 
@@ -48,7 +48,7 @@ def save_wall_photo(group_id, photo, server, hash, my_vk_key):
         'server': server,
         'hash': hash
     }
-    response = request_to_vk_api_post(method=method, parameters=parameters, access_token=my_vk_key)
+    response = post_request_to_vk_api(method=method, parameters=parameters, access_token=my_vk_key)
     return response
 
 
@@ -60,7 +60,7 @@ def create_wall_post_in_group(group_id, message, attachments_type, owner_id, med
         'message': message,
         'attachments': f'{attachments_type}{owner_id}_{media_id}'
     }
-    response = request_to_vk_api_post(method=method, parameters=parameters, access_token=my_vk_key)
+    response = post_request_to_vk_api(method=method, parameters=parameters, access_token=my_vk_key)
     return response
 
 
