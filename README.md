@@ -13,7 +13,7 @@
    `pip3 install -r requirements.txt`<br>
    `python -m pip install -r requirements.txt`<br>
    `python3.6 -m pip install -r requirements.txt`
-4. Создайте файл .env.
+4. Создайте файл `.env`.
 5. Запишите в файл .env переменные:
     ```
     MY_VK_KEY=ваш_токен_приложения вконтакте
