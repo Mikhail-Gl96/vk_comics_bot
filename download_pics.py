@@ -2,7 +2,7 @@ import requests
 from PIL import Image
 
 
-def load_img_with_pillow(url, path):
+def load_and_save_img_from_url(url, path):
     response = requests.get(url=url, verify=False, stream=True)
     response.raise_for_status()
     try:
