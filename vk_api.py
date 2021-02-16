@@ -64,12 +64,12 @@ def create_wall_post_in_group(group_id, message, attachments_type, owner_id, med
     return response
 
 
-def create_post_on_group_wall(group_id, current_img, my_vk_key):
+def create_post_on_group_wall(group_id, img_path, img_comment, my_vk_key):
     upload_url, album_id, user_id = get_url_to_upload_photo(group_id=group_id, my_vk_key=my_vk_key)
-    server, photo, photo_hash = upload_photo_on_wall(current_img['path'], upload_url)
+    server, photo, photo_hash = upload_photo_on_wall(img_path, upload_url)
     status = save_wall_photo(group_id=group_id, photo=photo, server=server, photo_hash=photo_hash, my_vk_key=my_vk_key)
     create_wall_post_in_group(group_id=group_id,
-                              message=current_img['comment'],
+                              message=img_comment,
                               attachments_type='photo',
                               owner_id=status['response'][0]['owner_id'],
                               media_id=status['response'][0]['id'],

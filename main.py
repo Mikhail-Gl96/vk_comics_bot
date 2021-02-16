@@ -25,8 +25,9 @@ def get_pic_from_xkcd(numb, path):
     img_url = response['img']
     img_comment = response['alt']
     img_name = os.path.split(urllib.parse.urlsplit(img_url)[2])[-1]
-    img_path = download_pics.load_and_save_one_size_snd_extension_img_from_url(img_url, path=os.path.join(path, img_name))
-    return {'path': img_path, 'comment': img_comment}
+    img_path = download_pics.load_and_save_one_size_snd_extension_img_from_url(url=img_url,
+                                                                               path=os.path.join(path, img_name))
+    return img_path, img_comment
 
 
 if __name__ == "__main__":
@@ -41,9 +42,10 @@ if __name__ == "__main__":
     current_img = None
     try:
         random_img_num = random.randint(0, get_pics_max_number())
-        current_img = get_pic_from_xkcd(random_img_num, image_paths)
+        img_path, img_comment = get_pic_from_xkcd(random_img_num, image_paths)
         vk_api.create_post_on_group_wall(group_id=my_vk_group_id,
-                                         current_img=current_img,
+                                         img_path=img_path,
+                                         img_comment=img_comment,
                                          my_vk_key=my_vk_key)
     except Exception as e:
         print(f'Error: {e}')
