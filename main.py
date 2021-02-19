@@ -25,7 +25,7 @@ def get_pic_from_xkcd(numb, path):
     img_url = response['img']
     img_comment = response['alt']
     img_name = os.path.split(urllib.parse.urlsplit(img_url)[2])[-1]
-    img_path = download_pics.load_and_save_one_size_snd_extension_img_from_url(url=img_url,
+    img_path = download_pics.load_and_save_one_size_and_extension_img_from_url(url=img_url,
                                                                                path=os.path.join(path, img_name))
     return img_path, img_comment
 
@@ -37,12 +37,12 @@ if __name__ == "__main__":
 
     base_path = os.getcwd()
     dir_name = 'images'
-    image_paths = os.path.join(base_path, dir_name)
-    os.makedirs(image_paths, exist_ok=True)
+    image_path = os.path.join(base_path, dir_name)
+    os.makedirs(image_path, exist_ok=True)
     current_img = None
     try:
         random_img_num = random.randint(0, get_pics_max_number())
-        img_path, img_comment = get_pic_from_xkcd(random_img_num, image_paths)
+        img_path, img_comment = get_pic_from_xkcd(random_img_num, image_path)
         vk_api.create_post_on_group_wall(group_id=my_vk_group_id,
                                          img_path=img_path,
                                          img_comment=img_comment,
