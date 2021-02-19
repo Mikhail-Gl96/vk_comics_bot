@@ -18,10 +18,10 @@ def post_request_to_vk_api(method, parameters, access_token, v='5.130'):
     return response
 
 
-def get_url_to_upload_photo(group_id, my_vk_key):
+def get_url_to_upload_photo(group_id, vk_key):
     method = 'photos.getWallUploadServer'
     parameters = {'group_id': group_id}
-    response = post_request_to_vk_api(method=method, parameters=parameters, access_token=my_vk_key)
+    response = post_request_to_vk_api(method=method, parameters=parameters, access_token=vk_key)
     return response['response']['upload_url'], response['response']['album_id'], response['response']['user_id']
 
 
@@ -40,7 +40,7 @@ def upload_photo_on_wall(image_path, upload_url):
     return response['server'], response['photo'], response['hash']
 
 
-def save_wall_photo(group_id, photo, server, photo_hash, my_vk_key):
+def save_wall_photo(group_id, photo, server, photo_hash, vk_key):
     method = 'photos.saveWallPhoto'
     parameters = {
         'group_id': group_id,
@@ -48,11 +48,11 @@ def save_wall_photo(group_id, photo, server, photo_hash, my_vk_key):
         'server': server,
         'hash': photo_hash
     }
-    response = post_request_to_vk_api(method=method, parameters=parameters, access_token=my_vk_key)
+    response = post_request_to_vk_api(method=method, parameters=parameters, access_token=vk_key)
     return response
 
 
-def create_wall_post_in_group(group_id, message, attachments_type, owner_id, media_id, my_vk_key):
+def create_wall_post_in_group(group_id, message, attachments_type, owner_id, media_id, vk_key):
     method = 'wall.post'
     parameters = {
         'owner_id': f'-{group_id}',
@@ -60,18 +60,18 @@ def create_wall_post_in_group(group_id, message, attachments_type, owner_id, med
         'message': message,
         'attachments': f'{attachments_type}{owner_id}_{media_id}'
     }
-    response = post_request_to_vk_api(method=method, parameters=parameters, access_token=my_vk_key)
+    response = post_request_to_vk_api(method=method, parameters=parameters, access_token=vk_key)
     return response
 
 
-def create_post_on_group_wall(group_id, img_path, img_comment, my_vk_key):
-    upload_url, album_id, user_id = get_url_to_upload_photo(group_id=group_id, my_vk_key=my_vk_key)
+def create_post_on_group_wall(group_id, img_path, img_comment, vk_key):
+    upload_url, album_id, user_id = get_url_to_upload_photo(group_id=group_id, vk_key=vk_key)
     server, photo, photo_hash = upload_photo_on_wall(img_path, upload_url)
-    status = save_wall_photo(group_id=group_id, photo=photo, server=server, photo_hash=photo_hash, my_vk_key=my_vk_key)
+    status = save_wall_photo(group_id=group_id, photo=photo, server=server, photo_hash=photo_hash, vk_key=vk_key)
     create_wall_post_in_group(group_id=group_id,
                               message=img_comment,
                               attachments_type='photo',
                               owner_id=status['response'][0]['owner_id'],
                               media_id=status['response'][0]['id'],
-                              my_vk_key=my_vk_key)
+                              vk_key=vk_key)
 

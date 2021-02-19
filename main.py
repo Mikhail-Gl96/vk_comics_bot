@@ -32,8 +32,8 @@ def get_pic_from_xkcd(numb, path):
 
 if __name__ == "__main__":
     dotenv.load_dotenv()
-    my_vk_key = os.getenv('MY_VK_KEY')
-    my_vk_group_id = os.getenv('MY_GROUP_ID')
+    vk_key = os.getenv('VK_KEY')
+    vk_group_id = os.getenv('VK_GROUP_ID')
 
     base_path = os.getcwd()
     dir_name = 'images'
@@ -43,12 +43,14 @@ if __name__ == "__main__":
     random_img_num = random.randint(0, get_pics_max_number())
     img_path, img_comment = get_pic_from_xkcd(random_img_num, image_path)
     try:
-        vk_api.create_post_on_group_wall(group_id=my_vk_group_id,
+        vk_api.create_post_on_group_wall(group_id=vk_group_id,
                                          img_path=img_path,
                                          img_comment=img_comment,
-                                         my_vk_key=my_vk_key)
-    except Exception as e:
-        print(f'Error: {e}')
+                                         vk_key=vk_key)
+    except requests.HTTPError as e:
+        print(f'HTTP Error: {e}')
+    except ValueError as e:
+        print(f'Value Error: {e}')
     finally:
         os.remove(image_path)
 
