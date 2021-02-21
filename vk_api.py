@@ -13,7 +13,7 @@ def post_request_to_vk_api(method, parameters, access_token, v='5.130'):
     response.raise_for_status()
     response = response.json()
     # Если ошибка в теле запроса - обработаем вручную
-    if not response.get('error'):
+    if response.get('error'):
         raise requests.HTTPError(f'{response["error"]}')
     return response
 
@@ -35,7 +35,7 @@ def upload_photo_on_wall(image_path, upload_url):
         response.raise_for_status()
         response = response.json()
         # Если пришел пустой массив с фото - значит где-то ошибка
-        if not response.get('photo'):
+        if response.get('photo') == "[]":
             raise ValueError(f'photo is empty: {response}')
     return response['server'], response['photo'], response['hash']
 
