@@ -25,7 +25,7 @@ def get_pic_from_xkcd(numb, path):
     img_url = response['img']
     img_comment = response['alt']
     img_name = os.path.split(urllib.parse.urlsplit(img_url)[2])[-1]
-    img_path = download_pics.load_and_save_one_size_and_extension_img_from_url(url=img_url,
+    img_path = download_pics.load_and_save_one_extension_img_from_url(url=img_url,
                                                                                path=os.path.join(path, img_name))
     return img_path, img_comment
 
